@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-<title>【你的品牌名】 · 宠物疗愈陪伴 · Est. 2024</title>
-<meta name="description" content="美式复古风格的宠物疗愈陪伴品牌 --- 用陪伴驱散孤寂，以复古温润日常。">
+<title>Paws & Peace · Pet Companion Therapy Station</title>
+<meta name="description" content="Paws & Peace – Professional pet companion therapy station. Healing hearts through pet companionship.">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Special+Elite&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -37,13 +37,22 @@ cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' widt
 }
 a,button{cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 64 64'><g fill='%23C27F3A'><circle cx='20' cy='22' r='6'/><circle cx='44' cy='22' r='6'/><circle cx='12' cy='38' r='5'/><circle cx='52' cy='38' r='5'/><ellipse cx='32' cy='46' rx='14' ry='11'/></g></svg>") 16 16, pointer;}
 
-/* ================ Sidebar ================ */
+/* ================ Sidebar (桌面版) ================ */
 .sidebar{
-position:fixed;inset:0 auto 0 0;width:260px;
+position:fixed;
+top:0;
+left:0;
+width:260px;
+height:100%;
 background:linear-gradient(180deg,#F2E3C2 0%,#E8D2A6 100%);
 border-right:2px dashed var(--line);
-padding:32px 24px;display:flex;flex-direction:column;gap:28px;z-index:50;
+padding:32px 24px;
+display:flex;
+flex-direction:column;
+gap:28px;
+z-index:1000;
 box-shadow:6px 0 24px -16px rgba(59,42,30,.4);
+transition: transform 0.3s ease;
 }
 .sidebar::before{
 content:"";position:absolute;inset:0;background:var(--paper-noise);opacity:.35;pointer-events:none;mix-blend-mode:multiply;
@@ -55,8 +64,8 @@ background:radial-gradient(circle at 35% 30%,#E8B97A,var(--rust));
 display:grid;place-items:center;color:var(--cream);font-family:"Special Elite";font-size:22px;
 box-shadow:inset 0 -4px 0 rgba(0,0,0,.15), var(--shadow);
 }
-.brand-name{font-family:"Playfair Display",serif;font-weight:700;font-size:22px;color:var(--rust);letter-spacing:.5px}
-.brand-sub{font-family:"Special Elite";font-size:12px;color:var(--ink-soft);letter-spacing:2px}
+.brand-name{font-family:"Playfair Display",serif;font-weight:700;font-size:18px;color:var(--rust);letter-spacing:.5px;line-height:1.2}
+.brand-sub{font-family:"Special Elite";font-size:11px;color:var(--ink-soft);letter-spacing:1px}
 .nav{display:flex;flex-direction:column;gap:4px;position:relative}
 .nav a{
 text-decoration:none;color:var(--ink-soft);font-size:15px;padding:10px 14px;border-radius:8px;
@@ -70,10 +79,44 @@ transform:translateX(4px);box-shadow:3px 3px 0 var(--amber);
 }
 .side-foot{margin-top:auto;font-family:"Special Elite";font-size:11px;color:var(--ink-soft);opacity:.75;line-height:1.6;position:relative}
 
-/* mobile menu */
-.menu-btn{display:none;position:fixed;top:16px;left:16px;z-index:60;
-background:var(--rust);color:var(--cream);border:none;padding:10px 14px;border-radius:6px;
-font-family:"Special Elite";letter-spacing:1px;box-shadow:var(--shadow)}
+/* 移动端菜单按钮 */
+.mobile-menu-btn{
+display: none;
+position: fixed;
+top: 18px;
+left: 18px;
+z-index: 1100;
+background: var(--rust);
+color: var(--cream);
+border: none;
+padding: 8px 18px;
+border-radius: 40px;
+font-family: "Special Elite", monospace;
+font-size: 15px;
+font-weight: bold;
+letter-spacing: 1px;
+box-shadow: var(--shadow);
+cursor: pointer;
+transition: all 0.2s ease;
+}
+.mobile-menu-btn:hover{
+background: #b85a34;
+transform: scale(1.02);
+}
+
+/* 移动端遮罩层 */
+.mobile-overlay{
+display: none;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0,0,0,0.4);
+z-index: 999;
+backdrop-filter: blur(2px);
+transition: opacity 0.3s ease;
+}
 
 /* ================ Main ================ */
 main{margin-left:260px;padding:0}
@@ -185,7 +228,7 @@ transition:transform .3s ease;
 .doing h4{font-family:"Playfair Display",serif;font-size:20px;margin-bottom:8px;color:var(--ink)}
 .doing p{color:var(--ink-soft);font-size:14.5px}
 
-/* ================ 地图容器样式（保持不变） ================ */
+/* ================ 地图容器样式 ================ */
 .map-wrap{
 background:var(--cream);
 border:6px double #DAB77A;
@@ -353,152 +396,201 @@ letter-spacing:2px;color:var(--ink-soft);border-top:1px dashed var(--line);margi
 .paw-trail{position:fixed;width:24px;height:24px;pointer-events:none;z-index:9999;opacity:0;transition:opacity .6s ease}
 .paw-trail svg{width:100%;height:100%}
 
-/* responsive */
-@media (max-width:900px){
-.menu-btn{display:block}
-.sidebar{transform:translateX(-100%);transition:transform .35s ease;width:240px}
-.sidebar.open{transform:none}
-main{margin-left:0}
-section{padding:80px 6% 80px}
-.hero-grid,.story-grid{grid-template-columns:1fr;gap:40px}
-.hero h1{font-size:44px}
-.section-title{font-size:32px}
-.services-grid{grid-template-columns:1fr}
-.doing-grid{grid-template-columns:1fr}
-.contact-grid{grid-template-columns:1fr}
-.stamp-img{position:relative;right:auto;top:auto;margin:0 auto 20px}
-.envelope{padding:48px 28px}
+/* ================ 移动端响应式 - 彻底重写 ================ */
+@media (max-width: 900px) {
+  .mobile-menu-btn {
+    display: block !important;
+  }
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1050;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .mobile-overlay {
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s;
+    z-index: 1040;
+  }
+  .mobile-overlay.show {
+    opacity: 1;
+    visibility: visible;
+  }
+  main {
+    margin-left: 0;
+  }
+  section {
+    padding: 80px 6% 80px;
+  }
+  .hero-grid,
+  .story-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .hero h1 {
+    font-size: 44px;
+  }
+  .section-title {
+    font-size: 32px;
+  }
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  .doing-grid {
+    grid-template-columns: 1fr;
+  }
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+  .stamp-img {
+    position: relative;
+    right: auto;
+    top: auto;
+    margin: 0 auto 20px;
+  }
+  .envelope {
+    padding: 48px 28px;
+  }
 }
 </style>
 </head>
 <body>
-<button class="menu-btn" id="menuBtn">☰ MENU</button>
+
+<!-- 移动端菜单按钮 + 遮罩层 -->
+<button class="mobile-menu-btn" id="mobileMenuBtn">☰ MENU</button>
+<div class="mobile-overlay" id="mobileOverlay"></div>
+
 <aside class="sidebar" id="sidebar">
 <div class="brand">
-<div class="brand-mark">P&C</div>
-<div class="brand-name">【你的品牌名】</div>
-<div class="brand-sub">EST. 【2024】 · PET HEALING CO.</div>
+<div class="brand-mark">P&P</div>
+<div class="brand-name">Paws & Peace<br>Pet Companion Therapy Station</div>
+<div class="brand-sub">EST. 2026 · HEALING HEARTS</div>
 </div>
 <nav class="nav" id="nav">
-<a href="#home" class="active">首页 / Home</a>
-<a href="#story">品牌故事 / Story</a>
-<a href="#services">疗愈陪伴 / Care</a>
-<a href="#map">疗愈足迹 / Map</a>
-<a href="#journal">毛孩日志 / Journal</a>
-<a href="#skills">技能爱好 / Craft</a>
-<a href="#contact">暖心联络 / Letters</a>
+<a href="#home" class="active">Home</a>
+<a href="#story">Our Story</a>
+<a href="#services">Therapy Services</a>
+<a href="#map">Healing Footprint</a>
+<a href="#journal">Milestones</a>
+<a href="#skills">Skills & Passions</a>
+<a href="#contact">Contact</a>
 </nav>
 <div class="side-foot">
-"向内求索<br/>温柔陪伴"<br/><br/>--- A Vintage Healing Diary ---
+"Paws for comfort,<br/>peace for soul"<br/><br/>--- A Vintage Healing Diary ---
 </div>
 </aside>
+
 <main>
 <!-- HERO -->
 <section id="home">
 <div class="hero-grid">
 <div class="hero reveal">
-<span class="section-tag">A VINTAGE PET HEALING STUDIO</span>
-<h1>陪伴是<br/>最温柔的处方<span class="stamp">SINCE 2024</span></h1>
-<div class="slogan">"让每一次抚摸，都成为灵魂的安顿。"</div>
-<p class="intro">【一句话介绍品牌】我们以美式复古的笔触，记录人与毛孩之间的疗愈日常 --- 从晨光中的散步，到深夜里的依偎，把每一段陪伴都酿成可以收藏的旧时光。</p>
+<span class="section-tag">Paws & Peace · EST. 2026</span>
+<h1>Paws for comfort,<br/>peace for soul<span class="stamp">SINCE 2026</span></h1>
+<div class="slogan">"Paws for comfort, peace for soul — healing hearts through pet companionship."</div>
+<p class="intro">Paws & Peace is a professional pet companion therapy station dedicated to emotional comfort and psychological healing. We combine trained therapy pets with compassionate care to help you find inner peace.</p>
 <div class="btn-row">
-<a href="#services" class="btn primary">🐾 预约陪伴</a>
-<a href="#story" class="btn">阅读故事</a>
+<a href="#services" class="btn primary">🐾 Book a Session</a>
+<a href="#story" class="btn">Read Our Story</a>
 </div>
 </div>
 <div class="reveal" style="position:relative">
 <div class="hero-card">
 <div class="polaroid">
 <span class="tape"></span>
-<div class="ph">FIELD NOTES · 1924 / 2024</div>
-<div class="cap">--- With my old friend, Biscuit ---</div>
+<div class="ph">FIELD NOTES · 2026</div>
+<div class="cap">--- Therapy dog "Biscuit" ---</div>
 </div>
 </div>
 </div>
 </div>
 </section>
 
-<!-- STORY -->
+<!-- STORY / Company Overview -->
 <section id="story">
-<span class="section-tag reveal">CHAPTER I · 品牌故事</span>
-<h2 class="section-title reveal">一本泛黄的<em>宠物疗愈日记</em></h2>
-<p class="section-lead reveal">品牌起源于一只被收养的老犬，与一段需要被治愈的时光。我们相信动物是世界上最温柔的"治疗师"，而复古的生活方式 --- 慢、细、有温度 --- 是承载这份疗愈最合适的容器。</p>
+<span class="section-tag reveal">CHAPTER I · OUR STORY</span>
+<h2 class="section-title reveal">Warm paws, <em>quiet hearts</em></h2>
+<p class="section-lead reveal">Paws & Peace was founded with the mission of "healing hearts through pet companionship". We believe that animals are nature’s best therapists.</p>
 <div class="story-grid">
 <div class="story-text reveal">
-<p>在快节奏的城市里，我们为人与毛孩搭建一处"慢空间"。这里没有喧嚣的算法，只有黄铜门铃、羊毛毯子，和午后窗边一杯还冒着热气的茶。</p>
-<p>我们与动物行为学家、临床心理师、复古美学工作者合作，将"疗愈"从感性词汇变成可被实践的日常 --- 一次牵引、一次梳毛、一段对话，都被认真对待。</p>
-<p>我们相信，温柔可以是一种专业；陪伴可以是一项手艺。</p>
+<p>In a fast-paced world, more and more people suffer from anxiety, loneliness and emotional exhaustion. However, not everyone can keep a pet due to housing restrictions or busy schedules. Paws & Peace fills this gap by offering a professional, warm space where people can interact with well-trained therapy pets — dogs, cats and small animals — under the guidance of certified counselors and animal trainers.</p>
+<p>Our professional team includes licensed pet therapists, animal behaviorists and psychological consultants. We combine evidence-based animal-assisted intervention (AAI) with a cozy, vintage-inspired environment. Our slogan “Paws for comfort, peace for soul” reflects our core promise: through the gentle touch of a paw, we bring comfort to the heart and guide you back to inner peace.</p>
+<p>We are committed to professionalism, warmth and personalization — every client receives an initial psychological assessment and a tailored therapy plan. This is not just a pet café; it is a healing journey.</p>
 </div>
 <div class="focus-box reveal">
-<h4>✦ 我关注与学习的事</h4>
+<h4>✦ What we focus on & learn</h4>
 <div class="focus-list">
-<div class="item"><span class="num">01</span><div><b>动物行为学 / Ethology</b><span>从眼神、尾巴和呼吸，读懂毛孩未说出口的话。</span></div></div>
-<div class="item"><span class="num">02</span><div><b>复古生活疗愈 / Slow Living</b><span>从1950年代的家居美学中提取"被照顾"的感觉。</span></div></div>
-<div class="item"><span class="num">03</span><div><b>动物辅助干预 / AAI</b><span>将疗愈犬引入医院、养老院与心理咨询场景。</span></div></div>
-<div class="item"><span class="num">04</span><div><b>临终关怀 / End-of-life Care</b><span>体面的告别，是给彼此最后的礼物。</span></div></div>
+<div class="item"><span class="num">01</span><div><b>Animal-Assisted Intervention (AAI)</b><span>Scientifically proven to lower cortisol and ease anxiety.</span></div></div>
+<div class="item"><span class="num">02</span><div><b>Mental Health & Emotional Wellbeing</b><span>One-on-one sessions, group activities and pet-assisted counseling.</span></div></div>
+<div class="item"><span class="num">03</span><div><b>Pet Care Education</b><span>Training courses and mental health workshops for the community.</span></div></div>
+<div class="item"><span class="num">04</span><div><b>End-of-life Emotional Support</b><span>Compassionate companionship for farewells and grief.</span></div></div>
 </div>
 </div>
 </div>
 </section>
 
-<!-- SERVICES -->
+<!-- SERVICES / Product & Services -->
 <section id="services">
-<span class="section-tag reveal">CHAPTER II · 疗愈陪伴</span>
-<h2 class="section-title reveal">我们提供的<em>三种温度</em></h2>
-<p class="section-lead reveal">每一项服务都像一封手写信 --- 慢慢写，认真寄。</p>
+<span class="section-tag reveal">CHAPTER II · THERAPY SERVICES</span>
+<h2 class="section-title reveal">Healing through <em>gentle paws</em></h2>
+<p class="section-lead reveal">We offer personalized pet companion therapy services designed for different needs — from anxiety relief to senior companionship.</p>
 <div class="services-grid">
-<div class="svc-card reveal"><div class="svc-icon">🐕</div><h3>动物辅助干预</h3><p>由认证疗愈犬陪同，进入医院、学校、机构等场景，帮助焦虑、孤独、创伤后人群获得情绪缓解。</p><div class="meta">SERVICE · 01</div></div>
-<div class="svc-card reveal"><div class="svc-icon">💌</div><h3>1对1 情感支持</h3><p>线下/线上预约。一只毛孩、一杯热饮、一段被认真倾听的时间，让你重新感觉到自己。</p><div class="meta">SERVICE · 02</div></div>
-<div class="svc-card reveal"><div class="svc-icon">🕯️</div><h3>临终安抚</h3><p>陪伴生命走完最后一程 --- 为毛孩与家庭提供仪式、记录与情感支持，让告别成为治愈的开始。</p><div class="meta">SERVICE · 03</div></div>
+<div class="svc-card reveal"><div class="svc-icon">🐾</div><h3>One-on-One Companion Sessions</h3><p>Private, 50-minute sessions with a calm therapy pet and a licensed counselor. Ideal for anxiety, social anxiety, or simply emotional reset.</p><div class="meta">SERVICE · 01</div></div>
+<div class="svc-card reveal"><div class="svc-icon">👥</div><h3>Group Interaction Activities</h3><p>Small-group workshops where participants bond with therapy pets and each other — reducing loneliness and building trust.</p><div class="meta">SERVICE · 02</div></div>
+<div class="svc-card reveal"><div class="svc-icon">🕯️</div><h3>Pet-Assisted Psychological Counseling</h3><p>Integrate therapy pets into professional mental health sessions. Especially effective for trauma, depression and elderly care.</p><div class="meta">SERVICE · 03</div></div>
 </div>
 <div class="doing-grid">
-<div class="doing reveal"><span class="stamp-tag">NOW PLAYING</span><h4>当前项目 · 城市里的"安抚客厅"</h4><p>在四个城市试点开放疗愈客厅，每月接待 200+ 位需要被陪伴的来访者与他们的毛孩。</p></div>
-<div class="doing reveal"><span class="stamp-tag">SELF-GROWTH</span><h4>自我成长 · 复古美学 × 动物医学</h4><p>正在系统学习 IAABC 行为顾问课程，并以一本手帐记录每一次陪伴中的发现。</p></div>
+<div class="doing reveal"><span class="stamp-tag">CURRENT PROJECT</span><h4>"Healing Living Room" Pop-up</h4><p>Partnering with community centers in 4 cities to offer free trial sessions for stressed urban workers and seniors.</p></div>
+<div class="doing reveal"><span class="stamp-tag">SELF-GROWTH</span><h4>Research & Education</h4><p>We are currently conducting a 6-month study on pet therapy’s effect on workplace burnout, in cooperation with local universities.</p></div>
 </div>
 </section>
 
-<!-- MAP —— 猫爪位置绝对精准（已验证标准经纬度） -->
+<!-- MAP -->
 <section id="map">
-<span class="section-tag reveal">CHAPTER III · 疗愈足迹</span>
-<h2 class="section-title reveal">我们走过的<em>城市</em></h2>
-<p class="section-lead reveal">在地图上的每一个图钉背后，都有一段毛孩与人的故事。点击图钉查看详情，滚轮可缩放地图。</p>
+<span class="section-tag reveal">CHAPTER III · HEALING FOOTPRINT</span>
+<h2 class="section-title reveal">Our <em>cities</em> of comfort</h2>
+<p class="section-lead reveal">Each pin on the map represents a place where Paws & Peace brings comfort. Click the cat paw markers for details.</p>
 <div class="map-wrap reveal">
 <div id="vintageMap"></div>
 </div>
 <div class="city-tags reveal" id="cityTags"></div>
 </section>
 
-<!-- TIMELINE -->
+<!-- MILESTONES -->
 <section id="journal">
-<span class="section-tag reveal">CHAPTER IV · 毛孩日志 · 经历</span>
-<h2 class="section-title reveal">写在<em>褪色信纸</em>上的过往</h2>
-<p class="section-lead reveal">品牌走过的每一段路，都被装订成一本可被翻阅的旧日记。</p>
+<span class="section-tag reveal">CHAPTER IV · MILESTONES</span>
+<h2 class="section-title reveal">A <em>fading diary</em> of our journey</h2>
+<p class="section-lead reveal">Every step we’ve taken is recorded in our vintage journal.</p>
 <div class="timeline">
-<div class="tl-item reveal"><div class="tl-year">★ 2024 · SPRING</div><h4>品牌诞生 · 第一只疗愈犬"饼干"上岗</h4><p>从一间老式公寓出发，开启第一次面向养老院的陪伴探访。</p></div>
-<div class="tl-item reveal"><div class="tl-year">★ 2024 · AUTUMN</div><h4>与三甲医院合作启动 AAI 项目</h4><p>在儿科与精神科开设疗愈陪伴时段，累计服务逾 500 人次。</p></div>
-<div class="tl-item reveal"><div class="tl-year">★ 2025 · SUMMER</div><h4>登上《复古生活》专栏 · 全国巡回</h4><p>团队走访 12 座城市，记录"人与动物之间的旧时光"主题影像志。</p></div>
-<div class="tl-item reveal"><div class="tl-year">★ 2026 · NOW</div><h4>成立"安抚客厅"实体空间</h4><p>在北京、上海、成都、广州落地四间复古疗愈空间，对外开放预约。</p></div>
+<div class="tl-item reveal"><div class="tl-year">★ SPRING 2026</div><h4>Brand Launch & First Therapy Dog "Biscuit"</h4><p>Opened our first studio in a renovated vintage house. Began weekly visits to a local nursing home.</p></div>
+<div class="tl-item reveal"><div class="tl-year">★ AUTUMN 2026</div><h4>Partnership with Mental Health Hospital</h4><p>Launched AAI program in pediatric and psychiatric wards, serving 500+ patients.</p></div>
+<div class="tl-item reveal"><div class="tl-year">★ SUMMER 2027</div><h4>National Tour: “Old Times, Warm Paws”</h4><p>Traveled to 12 cities, documenting pet-human bonds through vintage photography.</p></div>
+<div class="tl-item reveal"><div class="tl-year">★ 2028 · NOW</div><h4>Four Permanent “Healing Living Rooms”</h4><p>Established physical spaces in Beijing, Shanghai, Chengdu and Guangzhou, open for appointments.</p></div>
 </div>
 </section>
 
 <!-- SKILLS -->
 <section id="skills">
-<span class="section-tag reveal">CHAPTER V · 技能与爱好</span>
-<h2 class="section-title reveal">手艺人的<em>工具箱</em></h2>
-<p class="section-lead reveal">既是科学的训练者，也是一个懂得慢生活的人。</p>
-<div class="skill-block reveal"><h4>✦ 专业技能</h4><div class="chips"><span class="chip">疗愈犬认证 (Therapy Dog Cert.)</span><span class="chip">宠物营养学</span><span class="chip">动物行为咨询 IAABC</span><span class="chip">急救与CPR</span><span class="chip">临终关怀师培训</span><span class="chip">情绪急救 Mental Health First Aid</span></div></div>
-<div class="skill-block reveal"><h4>✦ 爱好领域</h4><div class="chips"><span class="chip olive">老式胶片摄影</span><span class="chip olive">手写信件</span><span class="chip olive">中古家具收集</span><span class="chip olive">爵士乐与黑胶</span><span class="chip olive">手帐与拼贴</span><span class="chip olive">花园与香草种植</span></div></div>
-<div class="skill-block reveal"><h4>✦ 持续关注与学习</h4><div class="chips"><span class="chip">动物福利政策</span><span class="chip">复古疗愈美学</span><span class="chip">人宠关系研究</span><span class="chip">老年宠物医学</span></div></div>
+<span class="section-tag reveal">CHAPTER V · SKILLS & PASSIONS</span>
+<h2 class="section-title reveal">Craftsmanship & <em>heartfelt tools</em></h2>
+<p class="section-lead reveal">We are both scientific practitioners and slow-life enthusiasts.</p>
+<div class="skill-block reveal"><h4>✦ Professional Skills</h4><div class="chips"><span class="chip">Therapy Dog Certification (IAHAIO)</span><span class="chip">Pet Nutrition & Wellness</span><span class="chip">Animal Behavior Consulting IAABC</span><span class="chip">Pet First Aid & CPR</span><span class="chip">End-of-life Doula Training</span><span class="chip">Mental Health First Aid</span></div></div>
+<div class="skill-block reveal"><h4>✦ Personal Passions</h4><div class="chips"><span class="chip olive">Vintage Film Photography</span><span class="chip olive">Handwritten Letters</span><span class="chip olive">Mid-century Furniture</span><span class="chip olive">Jazz & Vinyl Records</span><span class="chip olive">Journaling & Collage</span><span class="chip olive">Herbal Gardening</span></div></div>
+<div class="skill-block reveal"><h4>✦ Continuous Learning</h4><div class="chips"><span class="chip">Animal Welfare Policy</span><span class="chip">Vintage Healing Aesthetics</span><span class="chip">Human-Animal Bond Research</span><span class="chip">Geriatric Pet Medicine</span></div></div>
 </section>
 
 <!-- CONTACT -->
 <section id="contact">
-<span class="section-tag reveal">CHAPTER VI · 暖心联络</span>
-<h2 class="section-title reveal">写一封<em>慢一点的信</em>给我们</h2>
-<p class="section-lead reveal">无论是预约陪伴、品牌合作，还是只是想说说话 --- 我们都会认真回信。</p>
-<div class="envelope reveal"><div class="stamp-img">PET<br/>HEALING<br/>★ ★ ★<br/>POSTAGE<br/>2026</div><div class="env-inner"><h3 style="font-family:'Playfair Display',serif;color:var(--rust);font-size:26px;margin-bottom:6px">致 · 一位愿意慢下来的你</h3><p style="color:var(--ink-soft);font-size:15px">我们在以下任何一种方式等你 ------</p><div class="contact-grid"><div class="c-row"><div class="lbl">EMAIL</div><div class="val">【your@email.com】</div></div><div class="c-row"><div class="lbl">TELEPHONE</div><div class="val">【你的电话】</div></div><div class="c-row"><div class="lbl">微信公众号</div><div class="val">【你的品牌名】疗愈日记</div></div><div class="c-row"><div class="lbl">小红书 / Instagram</div><div class="val">@【你的品牌名】</div></div><div class="c-row"><div class="lbl">地址 / STUDIO</div><div class="val">北京 · 上海 · 成都 · 广州</div></div><div class="c-row"><div class="lbl">合作邮箱 / PR</div><div class="val">partner@【你的品牌名】.com</div></div></div><p style="margin-top:30px;font-style:italic;color:var(--ink-soft);font-family:'Playfair Display',serif"> --- Yours, with a soft paw.</p></div></div>
+<span class="section-tag reveal">CHAPTER VI · LETTERS & COLLABORATION</span>
+<h2 class="section-title reveal">Write us a <em>slower letter</em></h2>
+<p class="section-lead reveal">For therapy appointments, partnerships, or just to say hello — we reply with care.</p>
+<div class="envelope reveal"><div class="stamp-img">PET<br/>HEALING<br/>★ ★ ★<br/>POSTAGE<br/>2026</div><div class="env-inner"><h3 style="font-family:'Playfair Display',serif;color:var(--rust);font-size:26px;margin-bottom:6px">To the one who slows down</h3><p style="color:var(--ink-soft);font-size:15px">Reach us through any of these vintage channels:</p><div class="contact-grid"><div class="c-row"><div class="lbl">EMAIL</div><div class="val">hello@pawsandpeace.com</div></div><div class="c-row"><div class="lbl">TELEPHONE</div><div class="val">+86 (10) 6502 8833</div></div><div class="c-row"><div class="lbl">WECHAT OFFICIAL</div><div class="val">PawsAndPeace</div></div><div class="c-row"><div class="lbl">INSTAGRAM / XIAOHONGSHU</div><div class="val">@pawsandpeace</div></div><div class="c-row"><div class="lbl">STUDIO ADDRESS</div><div class="val">Beijing · Shanghai · Chengdu · Guangzhou</div></div><div class="c-row"><div class="lbl">PARTNERSHIP</div><div class="val">partner@pawsandpeace.com</div></div></div><p style="margin-top:30px;font-style:italic;color:var(--ink-soft);font-family:'Playfair Display',serif"> --- Yours, with a soft paw.</p></div></div>
 </section>
-<footer>© 2026 【你的品牌名】 · 向内求索，温柔陪伴</footer>
+<footer>© 2026 Paws & Peace · Pet Companion Therapy Station · “Paws for comfort, peace for soul”</footer>
 </main>
 
 <div class="paw-trail" id="paw">
@@ -506,47 +598,96 @@ section{padding:80px 6% 80px}
 </div>
 
 <script>
-// ===== sidebar mobile =====
-const sb=document.getElementById('sidebar');
-document.getElementById('menuBtn').onclick=()=>sb.classList.toggle('open');
-document.querySelectorAll('#nav a').forEach(a=>a.addEventListener('click',()=>sb.classList.remove('open')));
+// ===== 移动端侧边栏控制（全新重写，确保可用）=====
+const mobileBtn = document.getElementById('mobileMenuBtn');
+const sidebarEl = document.getElementById('sidebar');
+const overlay = document.getElementById('mobileOverlay');
+const navLinkItems = document.querySelectorAll('#nav a');
+
+function openSidebar() {
+  sidebarEl.classList.add('open');
+  if (overlay) overlay.classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSidebar() {
+  sidebarEl.classList.remove('open');
+  if (overlay) overlay.classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+if (mobileBtn) {
+  mobileBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (sidebarEl.classList.contains('open')) {
+      closeSidebar();
+    } else {
+      openSidebar();
+    }
+  });
+}
+
+if (overlay) {
+  overlay.addEventListener('click', closeSidebar);
+}
+
+// 点击导航链接后关闭侧边栏（移动端）
+navLinkItems.forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 900) {
+      closeSidebar();
+    }
+  });
+});
+
+// 窗口大小改变时，如果变成桌面端，强制关闭侧边栏并恢复样式
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 900) {
+    closeSidebar();
+  }
+});
 
 // ===== active nav on scroll =====
-const navLinks=[...document.querySelectorAll('#nav a')];
-const sections=navLinks.map(a=>document.querySelector(a.getAttribute('href')));
-window.addEventListener('scroll',()=>{
-const y=window.scrollY+120;
-let idx=0;
-sections.forEach((s,i)=>{ if(s && s.offsetTop<=y) idx=i; });
-navLinks.forEach((a,i)=>a.classList.toggle('active',i===idx));
+const sections = [...document.querySelectorAll('#home, #story, #services, #map, #journal, #skills, #contact')];
+window.addEventListener('scroll', () => {
+  const y = window.scrollY + 120;
+  let idx = 0;
+  sections.forEach((s, i) => {
+    if (s && s.offsetTop <= y) idx = i;
+  });
+  navLinkItems.forEach((a, i) => a.classList.toggle('active', i === idx));
 });
 
 // ===== reveal on scroll =====
-const io=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add('visible')),{threshold:.12});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+const io = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-// ===== paw trail =====
-const paw=document.getElementById('paw');
-let pt=0;
-window.addEventListener('mousemove',e=>{
-paw.style.left=(e.clientX-12)+'px';
-paw.style.top=(e.clientY+14)+'px';
-paw.style.opacity='.85';
-clearTimeout(pt);
-pt=setTimeout(()=>paw.style.opacity='0',400);
+// ===== paw trail (desktop only) =====
+const paw = document.getElementById('paw');
+let ptTimer = 0;
+window.addEventListener('mousemove', e => {
+  if (window.innerWidth <= 768) return;
+  paw.style.left = (e.clientX - 12) + 'px';
+  paw.style.top = (e.clientY + 14) + 'px';
+  paw.style.opacity = '0.85';
+  clearTimeout(ptTimer);
+  ptTimer = setTimeout(() => paw.style.opacity = '0', 400);
 });
 
-// ========== 地图 —— 猫爪位置绝对精准（确保坐标与标记点完全重合）==========
+// ========== LEALFET MAP with cat paw markers ==========
 const cities = [
-  { name: '北京', lat: 39.9042, lng: 116.4074, desc: '公司总部 · 安抚客厅旗舰店', addr: '东城区 · 老胡同里的复古疗愈空间' },
-  { name: '上海', lat: 31.2304, lng: 121.4737, desc: '合作空间 · 联合诊所工作室', addr: '静安区 · 法租界老洋房' },
-  { name: '成都', lat: 30.5728, lng: 104.0668, desc: '疗愈犬训练基地', addr: '青羊区 · 院落式训练场' },
-  { name: '深圳', lat: 22.5431, lng: 114.0579, desc: '创意中心 · 品牌内容工作室', addr: '南山区 · 海边老厂房改造' },
-  { name: '广州', lat: 23.1291, lng: 113.2644, desc: 'AAI 医院驻点', addr: '越秀区 · 三甲儿科病区' },
-  { name: '杭州', lat: 30.2741, lng: 120.1551, desc: '季节性巡回点', addr: '西湖区 · 山中民宿合作' }
+  { name: 'Beijing', lat: 39.9042, lng: 116.4074, desc: 'Headquarters · Healing Living Room', addr: 'Dongcheng District · Vintage alleyway space' },
+  { name: 'Shanghai', lat: 31.2304, lng: 121.4737, desc: 'Collaboration Studio', addr: 'Jing’an District · French Concession garden house' },
+  { name: 'Chengdu', lat: 30.5728, lng: 104.0668, desc: 'Therapy Dog Training Base', addr: 'Qingyang District · Courtyard training field' },
+  { name: 'Shenzhen', lat: 22.5431, lng: 114.0579, desc: 'Creative Content Studio', addr: 'Nanshan District · Renovated seafront factory' },
+  { name: 'Guangzhou', lat: 23.1291, lng: 113.2644, desc: 'AAI Hospital Partner', addr: 'Yuexiu District · Pediatric ward' },
+  { name: 'Hangzhou', lat: 30.2741, lng: 120.1551, desc: 'Seasonal Pop-up Point', addr: 'West Lake District · Mountain retreat' }
 ];
 
-// 猫爪 SVG (清晰的肉垫造型)
 const catPawSVG = `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" width="30" height="30">
   <g fill="#9C4A2A" stroke="#5e2e1a" stroke-width="0.8">
     <path d="M32 44c-8 0-12-4-12-9 0-4 3-7 6-8 1 0 3-0.5 6-0.5 3 0 5 0.5 6 0.5 3 1 6 4 6 8 0 5-4 9-12 9z" />
@@ -557,10 +698,7 @@ const catPawSVG = `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" w
   </g>
 </svg>`;
 
-// 初始化地图 (完全居中于中国)
 const map = L.map('vintageMap').setView([35.0, 108.0], 5);
-
-// 复古风格底图
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
   attribution: '© <a href="https://www.openstreetmap.org/copyright">OSM</a> & CartoDB',
   subdomains: 'abcd',
@@ -568,7 +706,6 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
   minZoom: 4
 }).addTo(map);
 
-// 先为每个城市添加光晕圆 (L.circle 不依赖锚点，独立且精准)
 cities.forEach(c => {
   L.circle([c.lat, c.lng], {
     color: '#C89F6E',
@@ -579,39 +716,31 @@ cities.forEach(c => {
     interactive: false
   }).addTo(map);
   
-  // 猫爪标记 (divIcon 锚点严格居中)
   const catIcon = L.divIcon({
     className: 'paw-marker',
     html: `<div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:#FDF8EE;border:2px solid #9C4A2A;border-radius:50%;box-shadow:2px 2px 0 rgba(59,42,30,.25);">${catPawSVG}</div>`,
     iconSize: [44, 44],
-    iconAnchor: [22, 22],       // 锚点取图标正中心，确保坐标点就是圆形中心
+    iconAnchor: [22, 22],
     popupAnchor: [0, -24]
   });
-  
   L.marker([c.lat, c.lng], { icon: catIcon })
     .addTo(map)
     .bindPopup(`
       <div class="pop-name">🐱 ${c.name}</div>
       <div class="pop-desc">${c.desc}</div>
       <div class="pop-addr">${c.addr}</div>
-    `, { maxWidth: 240, autoPan: true });
+    `, { maxWidth: 240 });
 });
 
-// 强制地图容器在每次尺寸变化后重新计算大小 (避免偏移)
-window.addEventListener('resize', () => {
-  setTimeout(() => map.invalidateSize(), 100);
-});
-window.addEventListener('load', () => {
-  setTimeout(() => map.invalidateSize(), 200);
-});
-// 监听容器大小变化 (保证始终准确)
+window.addEventListener('resize', () => setTimeout(() => map.invalidateSize(), 100));
+window.addEventListener('load', () => setTimeout(() => map.invalidateSize(), 200));
+
 const mapContainer = document.getElementById('vintageMap');
 if (mapContainer) {
   const resizeObserver = new ResizeObserver(() => map.invalidateSize());
   resizeObserver.observe(mapContainer);
 }
 
-// 生成城市标签 (完全不变)
 const tagWrap = document.getElementById('cityTags');
 cities.forEach(c => {
   const t = document.createElement('span');
